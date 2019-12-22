@@ -2,7 +2,7 @@
 CircleCI is being weird. Time for a test.
 
 
-Latest release: v0.2.0
+Latest release: v0.3.0
 
 ---
 
