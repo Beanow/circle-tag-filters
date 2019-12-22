@@ -36,10 +36,17 @@ workflows:
             branches:
               ignore:
                 - master
-
       - deploy_dev:
           requires:
             - test
           filters:
             branches:
               only: master
+      - deploy_tag:
+          requires:
+            - test
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
