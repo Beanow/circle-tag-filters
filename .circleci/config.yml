@@ -1,0 +1,45 @@
+version: 2.1
+
+executors:
+  node:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/repo
+
+jobs:
+  test:
+    executor: node
+    steps:
+      - run: echo "Tests OK!"
+  deploy_dryrun:
+    executor: node
+    steps:
+      - run: echo "Deploy dry run.... OK"
+  deploy_dev:
+    executor: node
+    steps:
+      - run: echo "Deploying to dev.... OK"
+  deploy_tag:
+    executor: node
+    steps:
+      - run: echo "Deploying tagged release.... OK"
+
+workflows:
+  version: 2.0
+  commit:
+    jobs:
+      - test
+      - deploy_dryrun:
+          requires:
+            - test
+          filters:
+            branches:
+              ignore:
+                - master
+
+      - deploy_dev:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
