@@ -42,6 +42,15 @@ workflows:
           filters:
             branches:
               only: master
+
+  tagged-release:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
       - deploy_tag:
           requires:
             - test
