@@ -11,6 +11,14 @@ jobs:
     executor: node
     steps:
       - run: echo "Tests OK!"
+  test_full10:
+    executor: node
+    steps:
+      - run: echo "Tests full 10 OK!"
+  test_full12:
+    executor: node
+    steps:
+      - run: echo "Tests full 12 OK!"
   deploy_dryrun:
     executor: node
     steps:
@@ -29,9 +37,13 @@ workflows:
   commit:
     jobs:
       - test
+      - test_full10
+      - test_full12
       - deploy_dryrun:
           requires:
             - test
+            - test_full10
+            - test_full12
           filters:
             branches:
               ignore:
@@ -39,6 +51,8 @@ workflows:
       - deploy_dev:
           requires:
             - test
+            - test_full10
+            - test_full12
           filters:
             branches:
               only: master
@@ -46,16 +60,18 @@ workflows:
   tagged-release:
     jobs:
       - test:
-          filters:
+          filters: &version-tag-only
             branches:
               ignore: /.*/
             tags:
               only: /^v.*/
+      - test_full10:
+          filters: *version-tag-only
+      - test_full12:
+          filters: *version-tag-only
       - deploy_tag:
           requires:
             - test
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
+            - test_full10
+            - test_full12
+          filters: *version-tag-only
